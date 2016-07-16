@@ -1,0 +1,57 @@
+>db.createCollection("Employee")
+ to create collection
+
+
+>show collections
+ to view all collections
+
+Rule :
+There must be _id column on every document, if you don't provide Mongodb automatically provids _id column
+
+
+>db.Employee.save({_id:1,name:"Sachin"})
+
+for String either you can use single or double quote
+
+
+>db.Employee.drop()
+to drop collection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

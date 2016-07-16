@@ -1,0 +1,31 @@
+
+
+MongoDB was developed in 2007 by a New York based orgranization 10gen which is now called MongoDB Inc.
+MongoDB is an open-source document database, and leading NoSQL database. MongoDB is written in c++.
+
+In 2009, MongoDB was introduced in the market as an open source database server.
+
+
+Advantages :
+
+MongoDB != RDBMS
+
+Simplicity 
+MongoDB being a non-sql database management system is much simpler and complexities that come with relational databases are removed in MongoDB. JSON like, document oriented storage simplifies database systems.
+
+Data Replication and Reliability
+MongoDB allow users to replicate data on multiple mirrored servers which ensures data reliability. In case a server crashes, its mirror is still available and database processing remains unaltered. 
+
+NoSQL Queries
+MongoDB has non-sql query mechanism which results in lightning fast data storage and retrieval functionalities. JSON Based document oriented queries are extremely fast as compared to traditional sql queries.
+e.g.
+// your application code
+class Test { int x; string [] tags;}
+// mongo document for Test
+{ x: 1, tags: [‘abc’,’xyz’] }
+
+Open Source
+MongoDB is a database server that is open source and customizable according to the requirements of the organization.
+
+
+MongoDB is highly recommended in scenarios where fast processing and simplicity is the key. Due to its NoSQL based query mechanism it is robust, scalable and highly efficient.

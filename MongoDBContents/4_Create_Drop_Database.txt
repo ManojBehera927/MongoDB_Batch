@@ -1,0 +1,17 @@
+show dbs =>to view all databases
+
+by default one database is present i.e. "local" used for internal purpose
+
+To create a database 
+
+>use db
+use existing one or create a new database
+
+>db
+ to view current database
+
+Note : After adding first collection database will be reflected.
+
+>db.droptDabase()
+ To drop database
+

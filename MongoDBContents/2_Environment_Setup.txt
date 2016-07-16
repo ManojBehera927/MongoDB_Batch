@@ -1,0 +1,28 @@
+
+
+
+Download MongoDB from https://www.mongodb.org/downloads
+
+Release:
+3.2.8
+
+Based on o.s. download Mongodb.
+
+
+All the executable files are under "C:\Program Files\MongoDB\Server\3.2\bin", so we have to set path upto bin folder.
+
+
+Execute following commands on command prompt
+
+create any folder
+d:\>md db  
+
+start database server
+d:\>mongod --port=30000 --dbpath=d:\db
+
+open another command prompt, to start client
+d:\>mongo --port=30000
+
+To view mongodb commands type
+>help
+
