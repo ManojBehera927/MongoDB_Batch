@@ -1,0 +1,353 @@
+Q. Create a collection with the same document
+
+db.animals.find({_id:1}).pretty()
+{
+  "_id":1,
+  "name" :"cat",
+  "tags":[
+          "land",
+          "cute"
+         ],
+
+    "info":{"type":mammal",
+    "color":red"
+    }
+}
+
+> db.an.insert({_id:1,name:"Cat",tags:["land","cute"],info:{type:"mammal",color:
+"red"}})
+
+
+> db.emp.insert([{_id:1,name:"Sachin",designation:"Developer",salary:45000}, {_i
+d:2,name:"Nilesh",designation:"Accountant",salary:35000}, {_id:3,name:"Richard",
+designation:"Tester",salary:40000} ])
+
+
+update :
+--------
+Atomic within a document, no two clients can update the same document at a time.
+db.foo.update(query,update,options)
+query : which doucment you are targeting
+update : what change
+options :such as one or many?,upsert
+
+> db.emp.update({},{$inc:{salary:2000}},{multi:true})
+
+>db.a.update({},{$push:{things:4}},{multi:true});
+adding 4 to all documents in things array
+
+updating salary of _id=1 by 50000
+> db.emp.update({_id:1},{$set:{salary:50000}})
+
+or assume that existing salary : 45000
+> db.emp.update({_id:1},{$inc:{salary:5000}})
+
+
+
+Set operator
+------------
+db.a.save({_id:1,x:10});
+db.a.update({_id:1},({$set:{y:3}})
+db.a.update({_id:1},({$inc:{x:1}})
+id 1  x  11  and y 3
+
+Unset operator
+--------------
+>db.a.find()
+{"_id":1,"x":11,"y":3}
+>db.a.update({_id:1},{$unset:{y:''}})
+ or
+>db.a.update({id:1},{$unset:{y:0}})
+
+rename
+------
+db.a.save({_id:1,Naem:"bob"})
+
+db.a.update({_id:1}, {$rename:{'Naem':"Name'}})  where 'Naem' N is case sensitive
+
+
+
+$push for Array
+---------------
+db.a.save({_id:1})
+
+db.a.update({_id:1},{$push:{things:'one'}})
+
+db.a.update({_id:1},{$push:{things:'two'}})
+
+db.a.update({_id:1},{$push:{things:'three'}})
+db.a.update({_id:1},{$push:{things:'three'}})-------three added twice
+
+if we don't want duplicates use addToSet
+
+addToSet
+--------
+db.a.update({_id:1},{$addToSet:{things:'four'}})
+db.a.update({_id:1},{$addToSet:{things:'four'}})
+
+pull
+----
+to remove all "three", can't remove single three
+
+db.a.update({_id:1},{$pull:{things:'three'}})
+db.a.update({_id:1},{$addToSet:{things:'three'}})
+
+
+pop
+---
+If you don't know exact location
+to remove array element
+db.a.update({_id:1},{$pop:{things:1}}) to remove last element
+db.a.update({_id:1},{$pop:{things:-1}}) to remove first element
+
+updating Array value :
+-------------------------
+> db.students.insert({_id:1,grades:[80,85]})
+
+> db.students.update({_id:1,grades:80},{$set:{"grades.$":88}} )
+
+Consider the following document in the students collection whose grades element value is an array of embedded documents:
+
+{
+  _id: 4,
+  grades: [
+     { grade: 80, mean: 75, std: 8 },
+     { grade: 85, mean: 90, std: 5 },
+     { grade: 90, mean: 85, std: 3 }
+  ]
+}
+
+
+db.students.update(
+   { _id: 4, "grades.grade": 85 },
+   { $set: { "grades.$.std" : 6 } }
+)
+
+
+Update Embedded Documents Using Multiple Field Matches
+
+The $ operator can update the first array element that matches multiple query criteria specified with the $elemMatch() operator.
+
+Consider the following document in the students collection whose grades field value is an array of embedded documents:
+
+{
+  _id: 4,
+  grades: [
+     { grade: 80, mean: 75, std: 8 },
+     { grade: 85, mean: 90, std: 5 },
+     { grade: 90, mean: 85, std: 3 }
+  ]
+}
+In the example below, the $ operator updates the value of the std field in the first embedded document that has grade field with a value less than or equal to 90 and a mean field with a value greater than 80:
+
+db.students.update(
+   {
+     _id: 4,
+     grades: { $elemMatch: { grade: { $lte: 90 }, mean: { $gt: 80 } } }
+   },
+   { $set: { "grades.$.std" : 6 } }
+)
+This operation updates the first embedded document that matches the criteria, namely the second embedded document in the array:
+
+{
+  _id: 4,
+  grades: [
+    { grade: 80, mean: 75, std: 8 },
+    { grade: 85, mean: 90, std: 6 },
+    { grade: 90, mean: 85, std: 3 }
+  ]
+}
+
+---------------------------------------------------------------------------------------
+
+
+find():
+-------
+db.foo.find(query,projection)
+query - which doucment
+projection - how many fields
+
+db.animals.find({_id:1}) - entire document you will get it
+where _id=1;
+
+
+
+Projection
+-----------
+specific column - only id column, not other columns
+
+
+
+db.animals.find({_id:{$gt:5}},{_id:1})
+
+select id from animals
+db.animals.find({},{_id:1})
+
+
+Comparison
+----------
+db.animals.find({_id:{$gt:5}},{_id:1})
+
+                      $gt,$gte,$lt,$lte
+
+db.animals.find({_id:{$gt:2,$lt:4}},{_id:1})
+
+
+$not
+----
+db.animals.find({_id:{$not:{$gt:2}}},{_id:1}) - can use less than also
+
+$in
+---
+find the records whose id is 1 or 3
+db.animals.find({_id:{$in:[1,3]}},{_id:1})
+
+db.animals.find({_id:{$nin:[1,3]}},{_id:1})
+
+Arrays
+------
+find out animals who is cute or ocean or both
+
+db.animals.find({tags:{$in:['cute','ocean']}},{name:1})
+
+find out animals who are cute and ocean both
+db.animals.find({tags:{$all:['cute','ocean']}},{name:1})
+db.animals.find(tags:{$nin:['cute']}} {name:1})
+
+db.animals.find({_id:1}).pretty()
+{
+  "_id":1,
+  "name" :"cat",
+  "tags":[
+          "land",
+          "cute"
+         ],
+
+    "info":{"type":mammal",
+    "color":red"
+    }
+}
+
+Dot notation
+------------
+
+>db.animals.find({"info.canFly":true}).pretty()
+
+db.animals.find({info:{type:'bird',canFly:true}},{name:1})
+{"_id":6,"name":"duck"}
+
+db.animals.find({info:{canFly:true,type:'bird'}},{name:1})------------no records matching
+                                                                      sequence matters in MongoDB
+db.animals.find({info:{type:'bird'}},{name:1}) - no records matching
+                                                 not exist all records
+
+db.animals.find({"info.canFly":true,"info.type":'bird'},{name:1})
+now you will get records
+{"_id":6,"name":"duck"}
+
+null and $exists
+----------------
+db.animals.find({"info.canFly":true},{name:1})
+=>duck
+
+db.animals.find({"info.canFly":false},{name:1})
+=>Penguin
+db.animals.find({"info.canFly":null},{name:1})
+
+
+Assume that with some documents, canFly does not exist
+to check existed record only
+db.animals.find({"info.canFly":{$exists:true}},{name:1})
+
+show the documents which do not have field
+db.animals.find({"info.canFly":{$exists:true}},{name:1})
+
+all
+---
+db.animals.find({tags:{$all:['cute','ocean']}},{name:1})
+    
+And
+----
+db.animals.find({"info.type":'bird',tags:'cute'},{name:1}
+comma between the criteria performs like "And"
+
+db.animals.find({"info.type":'bird',tags:'ocean'},{name:1}
+
+
+More Projection
+---------------
+db.animals.find({_id:1},{_id:1})
+{"_id":1}
+
+db.animals.find({_id:1},{_id:1,name:1})
+{"_id":1,"name":"cat"}
+
+if you want to exclude fields specify 0
+db.animals.find({_id:1},{_id:0,name:0,info:0}) 
+{"tags":["land","cute"]}
+
+
+db.animals.find({_id:1},{name:1,info:1})
+=> id also comes
+
+to exclude the id, explicitly I have to specify 0 to _id
+db.animals.find({_id:0},{name:1,info:1})
+
+you cannot mix 0 and 1 ??
+
+Cursor 
+------
+var c=db.animals.find({},{name:1})
+c.size()
+=>6
+c.hasNext()
+true
+c.forEach(function(d){print(d.name)})
+=>
+cat
+rabbit
+shark
+dolphin
+penguin
+duck
+
+c.hasNext()
+=>false
+
+sort
+----
+db.animals.find({},{name:1}).sort({name:1})
+
+1 = Ascending 
+-1 = Descending
+
+we can sort with subdocument field also
+e.g.
+db.animals.find({},{name:1,"info.type":1}).sort({"info.type":1,"name":1})
+
+limit
+-----
+db.animals.find({},{_id:1}).sort({_id:-1}).limit(3)
+exact 3 or less than 3 recs you will find it.
+
+
+skip
+----
+db.animals.find({},{_id:1}).sort({_id:-1}).skip(1).limit(2)
+
+
+
+
+
+GUI vs Command line :
+---------------------
+some GUI's are available for MongoDB, some of them commercials and some of them are free
+
+Command line benefits
+-Free
+-Interactive
+-Scriptable
+-Makes you proficient
+
+
+
