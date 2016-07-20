@@ -1,0 +1,74 @@
+Create 3 folders under db
+-------------------------
+rs1
+rs2
+rs3
+
+
+To create database replica :
+---------------------------
+start "a" mongod --dbpath d:\db\rs1 --port 30000 --replSet "demo" 
+
+start "b" mongod --dbpath d:\db\rs2 --port 40000 --replSet "demo"  
+
+start "c" mongod --dbpath d:\db\rs3 --port 50000 --replSet "demo" 
+
+
+connect on 30000 port
+---------------------
+
+mongo --port 30000
+
+db.getMongo()
+-connection to 127.0.0.1:30000
+
+
+settings for replica set :
+--------------------------
+var demoConfig={
+"_id": "demo",
+"members": [
+{
+"_id":0,
+"host":"localhost:30000",
+"priority":10
+},
+{
+"_id":1,
+"host":"localhost:40000"
+},
+{
+"_id":2,
+"host":"localhost:50000",
+"arbiterOnly":true
+}
+]
+}
+
+>demoConfig
+
+
+
+
+or
+
+> rs.initiate(demoConfig) - To initiate replica set
+
+use temp
+
+add some records
+
+
+
+now join from 40000 port
+------------------------
+rs.slaveOk()
+
+
+
+
+kill primary
+
+
+once again see the the record from secondary
+
